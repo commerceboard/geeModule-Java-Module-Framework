@@ -1,2 +1,2 @@
-# geemodule
-geeModule Java Module System
+# geeModule
+geeModule Java Module Framework
