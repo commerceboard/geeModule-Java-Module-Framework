@@ -1,0 +1,31 @@
+# Java
+*.class
+*.war
+*.ear
+bin/
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+**/target/
+
+# Gradle
+build/
+.gradle/
+
+# Logs
+*.log
+*.iml
+.idea
+
+# Eclipse
+.eclipse
+.project
+.classpath
+.settings/
+
+# Vagrant
+.vagrant/
+Vagrantfile
