@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.geemodule;
 
 import com.geemodule.api.Module;
@@ -14,11 +30,6 @@ import java.util.*;
 
 /**
  * ClassLoader responsible for loading classes and resources from modules.
- *
- * @author Michael Delamere
- * @see com.geemodule.Geemodule
- * @see com.geemodule.ModuleLoader
- * @see com.geemodule.Module
  */
 public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClassLoader {
     static {
@@ -39,7 +50,7 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
         }
     }
 
-    private static final String[] STANDARD_PACKAGES = new String[]{"java.", "javax.", "sun.", "com.sun.", "oracle.", "com.yourkit."};
+    private static final String[] STANDARD_PACKAGES = new String[] { "java.", "javax.", "sun.", "com.sun.", "oracle.", "com.yourkit." };
 
     private final Module module;
 
@@ -53,7 +64,8 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
 
         // TODO: Hot swapping.
         // Timer timer = new Timer();
-        // timer.schedule(new HotSwapClassWatcher(module, this, hotSwappableClasses), 30000, 10000);
+        // timer.schedule(new HotSwapClassWatcher(module, this,
+        // hotSwappableClasses), 30000, 10000);
     }
 
     public ModuleClassLoaderImpl(final URL[] urls) {
@@ -91,11 +103,15 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
      * Attempts to load a class in the following order:
      * <ol>
      * <li>If class has already been loaded, then just return that.</li>
-     * <li>If not and the class is a standard-class (java.*, javax.*), just use the parent ClassLoader.</li>
-     * <li>If it is not a standard java class, attempt to it from the module.</li>
-     * <li>If the class was not found in this module, attempt to find it in one of its dependency modules.</li>
+     * <li>If not and the class is a standard-class (java.*, javax.*), just use
+     * the parent ClassLoader.</li>
+     * <li>If it is not a standard java class, attempt to it from the
+     * module.</li>
+     * <li>If the class was not found in this module, attempt to find it in one
+     * of its dependency modules.</li>
      * <li>If all the above fail, we fallback to the parent ClassLoader.</li>
-     * <li>If the class cannot be found with any ClassLoader, a ClassNotFoundException is thrown.</li>
+     * <li>If the class cannot be found with any ClassLoader, a
+     * ClassNotFoundException is thrown.</li>
      * </ol>
      */
     @Override
@@ -125,7 +141,8 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
             // }
 
             // TODO: Hot swapping.
-            // If hot-swapping is enabled, see if we already have a loaded class in our map.
+            // If hot-swapping is enabled, see if we already have a loaded class
+            // in our map.
             // HotSwappableClass hsw = hotSwappableClasses.get(name);
             //
             // if (hsw != null)
@@ -135,7 +152,8 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
 
             boolean isLocalMode = Boolean.getBoolean("cp.localmode");
 
-            // Don't bother dealing with module specific stuff if we are looking for a standard class
+            // Don't bother dealing with module specific stuff if we are looking
+            // for a standard class
             if (isStandardClass || isLocalMode) {
                 try {
                     c = super.loadClass(name);
@@ -165,7 +183,8 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
                 // Class not found locally. Try other modules next.
             }
 
-            // If the class is not in the current module, try loading it from a dependency module
+            // If the class is not in the current module, try loading it from a
+            // dependency module
             if (c == null && !isStandardClass && module.hasDependencies()) {
                 try {
                     // String loadClassKey = loadClassKey(name);
@@ -178,7 +197,8 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
                     // else if (loadCount > 100)
                     // {
                     // System.out.println("WARN: The class '" + name +
-                    // "' is being loaded more than a 100 times by the module '" + module.getName() + "'.");
+                    // "' is being loaded more than a 100 times by the module '"
+                    // + module.getName() + "'.");
                     // }
                     // else
                     // {
@@ -187,7 +207,8 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
 
                     c = module.loadClassFromDependency(name);
                 } catch (Throwable t) {
-                    // Class not found in other modules. Try parent ClassLoader next.
+                    // Class not found in other modules. Try parent ClassLoader
+                    // next.
                 }
             }
 
@@ -195,7 +216,8 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
                 try {
                     c = module.loadClassFromContainer(name);
                 } catch (Throwable t) {
-                    // Class not found in container ClassLoader. No other ClassLoader to try. Giving up.
+                    // Class not found in container ClassLoader. No other
+                    // ClassLoader to try. Giving up.
                 }
             }
         }
@@ -204,14 +226,16 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
             throw new ClassNotFoundException("[" + module.toUniqueId() + "] Class '" + name + "' could not be found.");
         }
 
-        // if (!isStandardClass && !hotSwappableClasses.containsKey(name) && nonSwappableClasses.contains(name))
+        // if (!isStandardClass && !hotSwappableClasses.containsKey(name) &&
+        // nonSwappableClasses.contains(name))
         // nonSwappableClasses.add(name);
 
         return c;
     }
 
     private Class<?> loadSwappableClass(String name) throws ClassNotFoundException {
-        // it is assumed to be that the class is already available in the available classes map
+        // it is assumed to be that the class is already available in the
+        // available classes map
         try {
             File classFile = new File(module.getClassesDir().toString(), convertToDefinitionName(name));
 
@@ -247,10 +271,13 @@ public class ModuleClassLoaderImpl extends URLClassLoader implements ModuleClass
     }
 
     /**
-     * Checks to see if the class that we are trying to load is a standard java-class (java.*, javax.*). If that is the case, then there is no need to
+     * Checks to see if the class that we are trying to load is a standard
+     * java-class (java.*, javax.*). If that is the case, then there is no need
+     * to
      * go through all the module logic, just use the parent-class-loader.
      *
-     * @param name Class that we are trying to load
+     * @param name
+     *            Class that we are trying to load
      * @return boolean isStandardClass
      */
     private final boolean isStandardClass(final String name) {

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.geemodule;
 
 import com.geemodule.api.*;
@@ -18,8 +34,6 @@ public class ModuleLoaderImpl implements ModuleLoader {
 
     /**
      * Initializes all modules and resolves their dependencies.
-     *
-     * @param modulesRootDir Path to the root directory where all the modules reside.
      */
     @Override
     public final ModuleLoader bootstrap(final String modulesRootDir) {
@@ -47,7 +61,8 @@ public class ModuleLoaderImpl implements ModuleLoader {
         } else {
             long startScanning = System.currentTimeMillis();
 
-            // Go through all the directories and attempt to load the module.properties
+            // Go through all the directories and attempt to load the
+            // module.properties
             for (File moduleDir : moduleDirs) {
                 if (LOG.isLoggable(Level.FINER)) {
                     LOG.finer("Scanning directory '" + moduleDir + "'.");
@@ -205,7 +220,7 @@ public class ModuleLoaderImpl implements ModuleLoader {
 
     @Override
     public final boolean exportsPackage(String classOrPackageName, boolean exactMatch) {
-        if(classOrPackageName == null)
+        if (classOrPackageName == null)
             return false;
 
         String[] packages = getPublicPackages();
@@ -279,78 +294,50 @@ public class ModuleLoaderImpl implements ModuleLoader {
         return types.toArray(new Class[types.size()]);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#lookup(String, String, String, String, Module[], PackageImport)
-     */
     @Override
     public final Class<?> lookup(final String className) throws ClassNotFoundException {
         return lookup(className, (String) null);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#lookup(String, String, String, String, Module[], PackageImport)
-     */
     @Override
     public final Class<?> lookup(final String className, final String moduleName) throws ClassNotFoundException {
         return lookup(className, moduleName, null);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#lookup(String, String, String, String, Module[], PackageImport)
-     */
     @Override
     public final Class<?> lookup(final String className, final String moduleName, final String moduleVendor) throws ClassNotFoundException {
         return lookup(className, moduleName, moduleVendor, null);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#lookup(String, String, String, String, Module[], PackageImport)
-     */
     @Override
     public final Class<?> lookup(final String className, final String moduleName, final String moduleVendor, final String versionRange) throws ClassNotFoundException {
         return lookup(className, moduleName, moduleVendor, versionRange, null);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#lookup(String, String, String, String, Module[], PackageImport)
-     */
     @Override
-    public final Class<?> lookup(final String className, final String moduleName, final String moduleVendor, final String versionRange, final Collection<Module> inModules) throws ClassNotFoundException {
+    public final Class<?> lookup(final String className, final String moduleName, final String moduleVendor, final String versionRange, final Collection<Module> inModules)
+        throws ClassNotFoundException {
         return lookup(className, moduleName, moduleVendor, versionRange, inModules, null, null);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#lookup(String, String, String, String, Module[], PackageImport)
-     */
     @Override
     public final Class<?> lookup(final String className, final Collection<Module> inModules) throws ClassNotFoundException {
         return lookup(className, inModules, null);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#lookup(String, String, String, String, Module[], PackageImport)
-     */
     @Override
     public final Class<?> lookup(final String className, final Collection<Module> inModules, final PackageImport forPackageImport) throws ClassNotFoundException {
         return lookup(className, null, null, null, inModules, forPackageImport, null);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#lookup(String, String, String, String, Module[], PackageImport)
-     */
     @Override
     public final Class<?> lookup(final String className, final Collection<Module> inModules, final PackageImport forPackageImport, final String ignoreModuleName) throws ClassNotFoundException {
         return lookup(className, null, null, null, inModules, forPackageImport, ignoreModuleName);
     }
 
-    /**
-     * Attempts to load a class from the module found in
-     * {@link com.geemodule.ModuleLoaderImpl#locateModule(String, String, String, String, Module[], PackageImport, String)}
-     *
-     * @see com.geemodule.ModuleLoaderImpl#locateModule(String, String, String, String, Module[], PackageImport, String)
-     */
     @Override
-    public final Class<?> lookup(final String className, final String moduleName, final String moduleVendor, final String versionRange, Collection<Module> inModules, final PackageImport forPackageImport, final String ignoreModuleName) throws ClassNotFoundException {
+    public final Class<?> lookup(final String className, final String moduleName, final String moduleVendor, final String versionRange, Collection<Module> inModules,
+        final PackageImport forPackageImport, final String ignoreModuleName) throws ClassNotFoundException {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Looking up '" + className + "' with lookup parameters [moduleName=" + moduleName + ", moduleVendor=" + moduleVendor + ", versionRange=" + versionRange + "].");
         }
@@ -370,52 +357,53 @@ public class ModuleLoaderImpl implements ModuleLoader {
         return c;
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#locateModule(String, String, String, String, Module[], PackageImport)
-     */
     @Override
     public final Module locateModule(final String className, final Collection<Module> inModules) {
         return locateModule(className, inModules, null);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#locateModule(String, String, String, String, Module[], PackageImport)
-     */
     @Override
     public final Module locateModule(final String className, final PackageImport forPackageImport) {
         return locateModule(className, null, forPackageImport);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#locateModule(String, String, String, String, Module[], PackageImport)
-     */
     @Override
     public final Module locateModule(final String className, final Collection<Module> inModules, final PackageImport forPackageImport) {
         return locateModule(className, null, null, null, inModules, forPackageImport, null);
     }
 
-    /**
-     * @see com.geemodule.ModuleLoaderImpl#locateModule(String, String, String, String, Module[], PackageImport, String
-     * ignoreModuleName)
-     */
     @Override
     public final Module locateModule(final String className, final Collection<Module> inModules, final PackageImport forPackageImport, final String ignoreModuleName) {
         return locateModule(className, null, null, null, inModules, forPackageImport, ignoreModuleName);
     }
 
     /**
-     * Attempts to locate a module according to the parameters passed to this method. The more specific the request is, the more likely it is to get
-     * exactly the module one wants. The minimum requirement it to provide the class-name.
+     * Attempts to locate a module according to the parameters passed to this
+     * method. The more specific the request is, the more likely it is to get
+     * exactly the module one wants. The minimum requirement it to provide the
+     * class-name.
      *
-     * @param className        Locates module that contains this class-name. This is the only required parameter. The rest are optional.
-     * @param moduleName       The module must have this exact name.
-     * @param moduleVendor     The module's vendor.
-     * @param versionRange     The module's version must match the specified version-range. Checkout out the OSGi-VersionRange documentation for more information.
-     * @param inModules        Only attempt to locate module using the passed in module array instead of searching in all modules.
-     * @param forPackageImport Only attempt to locate module in modules that have a matching ModulePackageExport.
+     * @param className
+     *            Locates module that contains this class-name. This is the only
+     *            required parameter. The rest are optional.
+     * @param moduleName
+     *            The module must have this exact name.
+     * @param moduleVendor
+     *            The module's vendor.
+     * @param versionRange
+     *            The module's version must match the specified version-range.
+     *            Checkout out the OSGi-VersionRange documentation for more
+     *            information.
+     * @param inModules
+     *            Only attempt to locate module using the passed in module array
+     *            instead of searching in all modules.
+     * @param forPackageImport
+     *            Only attempt to locate module in modules that have a matching
+     *            ModulePackageExport.
      * @return Module
      */
-    protected final Module locateModule(final String className, final String moduleName, final String moduleVendor, final String versionRange, final Collection<Module> inModules, final PackageImport forPackageImport, final String ignoreModuleName) {
+    protected final Module locateModule(final String className, final String moduleName, final String moduleVendor, final String versionRange, final Collection<Module> inModules,
+        final PackageImport forPackageImport, final String ignoreModuleName) {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Locating module for parameters [className=" + className + ", moduleName=" + moduleName + ", moduleVendor=" + moduleVendor + ", versionRange=" + versionRange + "].");
         }
@@ -434,16 +422,20 @@ public class ModuleLoaderImpl implements ModuleLoader {
             if (!module.isActive())
                 continue;
 
-            // If we do not want a particular module, ignore it. This is necessary when locating dependencies in order
-            // to avoid endless loops where the module keeps on calling itself again and again.
+            // If we do not want a particular module, ignore it. This is
+            // necessary when locating dependencies in order
+            // to avoid endless loops where the module keeps on calling itself
+            // again and again.
             if (ignoreModuleName != null && ignoreModuleName.equals(module.getName()))
                 continue;
 
-            // If package-import was specified and the current module does not have a matching export, skip this module
+            // If package-import was specified and the current module does not
+            // have a matching export, skip this module
             if (forPackageImport != null && !module.hasMatchingPackageExport(forPackageImport.getPrefix(), forPackageImport.getVersionRange()))
                 continue;
 
-            // Find out if module is exposing a package that matches the class name to lookup
+            // Find out if module is exposing a package that matches the class
+            // name to lookup
             PackageExport[] packageExports = module.getExportPackages();
 
             boolean moduleMatches = false;
@@ -491,19 +483,24 @@ public class ModuleLoaderImpl implements ModuleLoader {
             }
         }
 
-        // Most of the time, only 1 module will match. This is the easiest case, no further searching required.
-        // Obviously, the more parameters that are passed to this method, the more likely it is that we only end up with
-        // 1 result. Passing only the className increases the chance of finding more than one module containing an
+        // Most of the time, only 1 module will match. This is the easiest case,
+        // no further searching required.
+        // Obviously, the more parameters that are passed to this method, the
+        // more likely it is that we only end up with
+        // 1 result. Passing only the className increases the chance of finding
+        // more than one module containing an
         // appropriate export-package-definition considerably.
         if (foundMatchingModules.size() == 1) {
             locatedModule = foundMatchingModules.get(0);
         }
         // Should there be more than 1 module, we have to decide on one:
         // 1. Find the most specific package
-        // 2. If more than one of the most specific package exists, find the highest version with the help of the
+        // 2. If more than one of the most specific package exists, find the
+        // highest version with the help of the
         // OSGi-Version class.
         else if (foundMatchingModules.size() > 1) {
-            // Sort the found modules so that the most specific package is at the top (which may be more than one)
+            // Sort the found modules so that the most specific package is at
+            // the top (which may be more than one)
             // In this case we simply make use of the String.compareTo() method.
             Collections.sort(foundMatchingModules, new Comparator<Module>() {
                 public int compare(Module m1, Module m2) {
@@ -523,7 +520,8 @@ public class ModuleLoaderImpl implements ModuleLoader {
                 }
             }
 
-            // Pop out the first module with the most specific package name for comparison
+            // Pop out the first module with the most specific package name for
+            // comparison
             Module firstModule = foundMatchingModules.get(0);
 
             List<Module> modulesWithIdenticalMostSpecificPackage = new ArrayList<Module>();
@@ -543,7 +541,8 @@ public class ModuleLoaderImpl implements ModuleLoader {
                 }
             }
 
-            // If there are more than one, then sort by version using the OSGi Version.compareTo() method
+            // If there are more than one, then sort by version using the OSGi
+            // Version.compareTo() method
             if (modulesWithIdenticalMostSpecificPackage.size() > 1) {
                 Collections.sort(modulesWithIdenticalMostSpecificPackage);
                 Collections.reverse(modulesWithIdenticalMostSpecificPackage);
@@ -571,7 +570,8 @@ public class ModuleLoaderImpl implements ModuleLoader {
      * Resolves dependencies for all modules
      */
     private final void resolveDependencies() {
-        // Iterate through all the modules and find out what dependency they want to import
+        // Iterate through all the modules and find out what dependency they
+        // want to import
         for (Module importingModule : cache().getAll()) {
             List<Module> moduleDependencies = new ArrayList<Module>();
 
@@ -585,7 +585,8 @@ public class ModuleLoaderImpl implements ModuleLoader {
             if (moduleImports == null)
                 continue;
 
-            // Now iterate through all the imports and find matching exports in other modules
+            // Now iterate through all the imports and find matching exports in
+            // other modules
             for (PackageImport moduleImport : moduleImports) {
                 // Now iterate through *other* modules and check their exports
                 for (Module exportingModule : cache().getAll()) {
@@ -608,7 +609,8 @@ public class ModuleLoaderImpl implements ModuleLoader {
     }
 
     private final void setDependencies(final Module module, final Collection<Module> dependencies) {
-        // Add dependencies to module via reflection, so that we do not need to add a public setter method to the
+        // Add dependencies to module via reflection, so that we do not need to
+        // add a public setter method to the
         // interface.
         try {
             Field field = module.getClass().getDeclaredField("dependencies");
@@ -620,10 +622,8 @@ public class ModuleLoaderImpl implements ModuleLoader {
     }
 
     /**
-     * Loads the module configuration from the module.properties found in the module's directory.
-     *
-     * @param moduleDir File module directory
-     * @return Properties module configuration
+     * Loads the module configuration from the module.properties found in the
+     * module's directory.
      */
     private final Properties getModuleConfig(final File moduleDir) {
         Properties moduleConfig = new Properties();

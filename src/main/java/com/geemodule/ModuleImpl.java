@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.geemodule;
 
 import java.io.File;
@@ -35,11 +51,6 @@ import com.geemodule.util.Strings;
 
 /**
  * Domain object for holding module data and finding its classes and resources.
- *
- * @author Michael Delamere
- * @see com.geemodule.Geemodule
- * @see com.geemodule.ModuleLoader
- * @see com.geemodule.ModuleClassLoader
  */
 public class ModuleImpl implements Module {
     private final String vendor;
@@ -131,7 +142,8 @@ public class ModuleImpl implements Module {
             this.importPackages = null;
         }
 
-        // Does the module want to use classes from the container using Geemodule?
+        // Does the module want to use classes from the container using
+        // Geemodule?
         this.importPackagesFromContainer = Boolean.valueOf(moduleConfig.getProperty("module.container.import.active", "false"));
 
         if (this.importPackagesFromContainer) {
@@ -191,7 +203,8 @@ public class ModuleImpl implements Module {
         if (this.isActive) {
             Class<ModuleBootstrap>[] bootstrapClasses = (Class<ModuleBootstrap>[]) this.findTypesAnnotatedWith(Bootstrapable.class, false);
 
-            // System.out.println("Module '" + toUniqueId() + ":: " + Arrays.asList(bootstrapClasses) + " -> " +
+            // System.out.println("Module '" + toUniqueId() + ":: " +
+            // Arrays.asList(bootstrapClasses) + " -> " +
             // this.getClass().getClassLoader());
 
             if (bootstrapClasses != null && bootstrapClasses.length > 0) {
@@ -200,7 +213,8 @@ public class ModuleImpl implements Module {
                         if (LOG.isLoggable(Level.FINER)) {
                             LOG.finer("Starting module bootstrap class: " + bootstrap.getName());
                         }
-                        // System.out.println("Starting module bootstrap class: " + bootstrap);
+                        // System.out.println("Starting module bootstrap class:
+                        // " + bootstrap);
 
                         bootstrap.newInstance().startup();
                     } catch (InstantiationException e) {
@@ -215,9 +229,6 @@ public class ModuleImpl implements Module {
 
     /**
      * Loads class using the ModuleClassLoader.
-     *
-     * @param name Fully qualified name of class that we are trying to load.
-     * @return Class<?>
      */
     @Override
     public final Class<?> loadClass(final String name) throws ClassNotFoundException {
@@ -226,9 +237,6 @@ public class ModuleImpl implements Module {
 
     /**
      * Attempts to load a class from one of its dependencies.
-     *
-     * @param name Fully qualified name of class that we are trying to load.
-     * @return Class<?>
      */
     @Override
     public final Class<?> loadClassFromDependency(final String name) throws ClassNotFoundException {
@@ -251,9 +259,6 @@ public class ModuleImpl implements Module {
 
     /**
      * Attempts to load a class from the container class-loader.
-     *
-     * @param name Fully qualified name of class that we are trying to load.
-     * @return Class<?>
      */
     @Override
     public final Class<?> loadClassFromContainer(final String name) throws ClassNotFoundException {
@@ -263,7 +268,8 @@ public class ModuleImpl implements Module {
             PackageImport packageContainerImport = findContainerPackageImport(name);
 
             if (packageContainerImport != null) {
-                // c = Class.forName(name, false, moduleLoader.getClass().getClassLoader());
+                // c = Class.forName(name, false,
+                // moduleLoader.getClass().getClassLoader());
                 c = Geemodule.class.getClassLoader().loadClass(name);
 
                 if (LOG.isLoggable(Level.FINER)) {
@@ -276,10 +282,8 @@ public class ModuleImpl implements Module {
     }
 
     /**
-     * Finds the best matching package-import definition which would have been specified under this modules' module.properties.
-     *
-     * @param className Fully qualified class name
-     * @return ModulePackageImport
+     * Finds the best matching package-import definition which would have been
+     * specified under this modules' module.properties.
      */
     @Override
     public final PackageImport findPackageImport(final String className) {
@@ -329,11 +333,10 @@ public class ModuleImpl implements Module {
     }
 
     /**
-     * Looks for a matching package-export definition for the specified package-prefix and version range. Typically this method is used to find an
+     * Looks for a matching package-export definition for the specified
+     * package-prefix and version range. Typically this method is used to find
+     * an
      * export matching a package-import from another module.
-     *
-     * @param packagePrefix The exported package to look for.
-     * @param versionRange  The version-range to look for according to the OSGi-VersionRange rules.
      */
     @Override
     public final boolean hasMatchingPackageExport(final String packagePrefix, final VersionRange versionRange) {
@@ -352,7 +355,8 @@ public class ModuleImpl implements Module {
                     hasMatchingExportPackage = true;
 
                     if (LOG.isLoggable(Level.FINEST)) {
-                        LOG.finest("[" + toUniqueId() + "] Import-version '" + versionRange + "' matches exported version '" + packageExport.getVersion() + "' for package-prefix '" + packagePrefix + "'");
+                        LOG.finest(
+                            "[" + toUniqueId() + "] Import-version '" + versionRange + "' matches exported version '" + packageExport.getVersion() + "' for package-prefix '" + packagePrefix + "'");
                     }
                 }
             }
@@ -362,11 +366,10 @@ public class ModuleImpl implements Module {
     }
 
     /**
-     * Finds a package-export where the package-prefix fits best to the class-name passed to this method. For example: if we were looking for the
-     * class com.a.b.c.Example then a ModulePackageExport with a package-prefix of com.a.b.c would be a closer match than one that only has com.a.b.
-     *
-     * @param className Class-name to find closest package-prefix for.
-     * @return closest matching package
+     * Finds a package-export where the package-prefix fits best to the
+     * class-name passed to this method. For example: if we were looking for the
+     * class com.a.b.c.Example then a ModulePackageExport with a package-prefix
+     * of com.a.b.c would be a closer match than one that only has com.a.b.
      */
     @Override
     public final String findClosestMatchingPackageExport(final String className) {
@@ -397,7 +400,8 @@ public class ModuleImpl implements Module {
     }
 
     /**
-     * A unique identification for this module. It must only exist once in the modules-root-directory.
+     * A unique identification for this module. It must only exist once in the
+     * modules-root-directory.
      */
     @Override
     public final String toUniqueId() {
@@ -420,9 +424,8 @@ public class ModuleImpl implements Module {
     }
 
     /**
-     * Classpath array containing the modules' classes folder and all the jars in the module/lib folder.
-     *
-     * @return URL[]
+     * Classpath array containing the modules' classes folder and all the jars
+     * in the module/lib folder.
      */
     @Override
     public final URL[] getClasspath() throws MalformedURLException {
@@ -541,8 +544,6 @@ public class ModuleImpl implements Module {
 
     /**
      * Find all the jars in the modules' lib folder.
-     *
-     * @returnList<URL>
      */
     private final List<URL> findJars() {
         List<URL> libUrls = new ArrayList<URL>();
@@ -654,7 +655,8 @@ public class ModuleImpl implements Module {
     }
 
     /**
-     * This compareTo() method only compares the OSGi-Version class. See the OSGi documentation for ordering rule.
+     * This compareTo() method only compares the OSGi-Version class. See the
+     * OSGi documentation for ordering rule.
      */
     @Override
     public final int compareTo(Module otherModule) {

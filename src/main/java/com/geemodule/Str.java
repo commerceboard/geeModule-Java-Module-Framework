@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.geemodule;
 
 public class Str {
@@ -54,35 +70,35 @@ public class Str {
     public static final String NUL = String.valueOf(Char.NUL);
 
     public static boolean isEmpty(String s) {
-	if (s == null)
-	    return true;
+        if (s == null)
+            return true;
 
-	return EMPTY.equals(s.trim());
+        return EMPTY.equals(s.trim());
     }
 
     public static boolean trimEquals(String s1, String s2) {
-	if (s1 == s2)
-	    return true;
+        if (s1 == s2)
+            return true;
 
-	if (s1 == null && s2 == null)
-	    return true;
+        if (s1 == null && s2 == null)
+            return true;
 
-	if ((s1 != null && s2 == null) || (s1 == null && s2 != null))
-	    return false;
+        if ((s1 != null && s2 == null) || (s1 == null && s2 != null))
+            return false;
 
-	return s1.trim().equals(s2.trim());
+        return s1.trim().equals(s2.trim());
     }
 
     public static boolean trimEqualsIgnoreCase(String s1, String s2) {
-	if (s1 == s2)
-	    return true;
+        if (s1 == s2)
+            return true;
 
-	if (s1 == null && s2 == null)
-	    return true;
+        if (s1 == null && s2 == null)
+            return true;
 
-	if ((s1 != null && s2 == null) || (s1 == null && s2 != null))
-	    return false;
+        if ((s1 != null && s2 == null) || (s1 == null && s2 != null))
+            return false;
 
-	return s1.trim().equalsIgnoreCase(s2.trim());
+        return s1.trim().equalsIgnoreCase(s2.trim());
     }
 }
