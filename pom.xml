@@ -6,9 +6,10 @@
 	<version>0.9.1-rc1</version>
 	<packaging>jar</packaging>
 
-   <name>geeModule</name>
-    <description>A simple Java framework for managing and importing modules. No special building or packaging required.</description>
-	
+	<name>geeModule</name>
+	<url>http://geetools.com/geemodule</url>
+	<description>A simple Java framework for managing and importing modules. No special building or packaging required.</description>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
