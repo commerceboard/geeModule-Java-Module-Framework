@@ -1,4 +1,4 @@
-# geeModule - Java Modules Framework
+# geeModule - Java Module Framework
 
 **geeModule is a Java framework for managing modules.**
 It requires no special building or packaging and instead loads classes and resources directly from their directories.
